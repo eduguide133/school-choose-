@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eduguide - Ирээдүйн сургуулиа сонгох ухаалаг хөтөч</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Ерөнхий загвар */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #070a13 0%, #0f172a 50%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Толгой хэсэг */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -1.5px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        /* Хайлтын хэсэг */
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .search-container h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #e2e8f0;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 25px rgba(129, 140, 248, 0.4);
+        }
+
+        .suggestions {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .suggestions span {
+            color: #38bdf8;
+            cursor: pointer;
+            text-decoration: underline;
+            margin: 0 5px;
+            font-weight: 500;
+        }
+
+        /* Интерактив илэрц харуулах карт */
+        .result-card {
+            width: 100%;
+            max-width: 700px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 40px;
+            display: none;
+            animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            margin-bottom: 60px;
+        }
+
+        .result-card h2 {
+            font-size: 2.2rem;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .info-tag {
+            display: inline-block;
+            background: rgba(192, 132, 252, 0.2);
+            color: #c084fc;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(192, 132, 252, 0.3);
+        }
+
+        .result-card p {
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(192, 132, 252, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(192, 132, 252, 0.5);
+            background: linear-gradient(90deg, #c084fc, #818cf8);
+        }
+
+        /* ---- ЭРЭЛТТЭЙ 30 УЛСЫН ХЭСЭГ ---- */
+        .countries-section {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .category-container {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            color: #a78bfa;
+            margin-bottom: 20px;
+            border-left: 4px solid #818cf8;
+            padding-left: 12px;
+            font-weight: 600;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .country-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 22px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border 0.3s;
+        }
+
+        .country-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .country-card h4 {
+            font-size: 1.15rem;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .country-card h4 span {
+            font-size: 0.85rem;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+
+        .country-card p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Анимациуд */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .logo { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">eduguide</div>
+        <p>Ирээдүйн сургууль, боловсролоо сонгох ухаалаг хөтөч</p>
+    </header>
+
+    <div class="search-container">
+        <h3>Мөрөөдлийн сургууль эсвэл Улсын нэрийг бичээрэй</h3>
+        <input type="text" id="mainInput" placeholder="Жишээ нь: MIT, Герман, Солонгос, Канад..." oninput="handleSearch()">
+        <div class="suggestions">
+            Шууд дарах: 
+            <span onclick="quickSearch('Солонгос')">Солонгос</span>, 
+            <span onclick="quickSearch('Герман')">Герман</span>, 
+            <span onclick="quickSearch('MIT')">MIT</span>,
+            <span onclick="quickSearch('Канад')">Канад</span>
+        </div>
+    </div>
+
+    <div class="result-card" id="resultCard">
+        <div class="info-tag" id="resType">Төрөл</div>
+        <h2 id="resName">Нэр</h2>
+        <p id="resDesc">Дэлгэрэнгүй мэдээлэл энд харагдана.</p>
+        <a href="#" id="resLink" target="_blank" class="action-btn">Дэлгэрэнгүй & Тэтгэлгийн мэдээлэл үзэх ↗</a>
+    </div>
+
+    <div class="countries-section">
+        <h2 class="section-title">✨ Хамгийн их эрэлттэй шилдэг 30 улс</h2>
+        
+        <div class="category-container">
+            <div class="category-title">Барууны болон Англи хэлтэй орнууд</div>
+            <div class="grid-layout" id="cat1"></div>
+        </div>
+
+        <div class="category-container">
+            <div class="category-title">Азийн өндөр хөгжилтэй орнууд</div>
+            <div class="grid-layout" id="cat2"></div>
+        </div>
+
+        <div class="category-container">
+            <div class="category-title">Европын Холбооны орнууд (Үнэгүй & Хямд сургалттай)</div>
+            <div class="grid-layout" id="cat3"></div>
+        </div>
+
+        <div class="category-container">
+            <div class="category-title">Скандинавын орнууд (Амьдралын чанар & Инноваци)</div>
+            <div class="grid-layout" id="cat4"></div>
+        </div>
+
+        <div class="category-container">
+            <div class="category-title">Бусад бүс нутгийн эрэлттэй орнууд</div>
+            <div class="grid-layout" id="cat5"></div>
+        </div>
+    </div>
+
+    <script>
+        // Нэгдсэн том мэдээллийн сан (Сургуулиуд + 30 Улс)
+        const database = {
+            // Сургуулиуд
+            "mit": { name: "MIT (Massachusetts Institute of Technology)", type: "АНУ / Технологийн Шилдэг", desc: "Дэлхийн технологи, инженерчлэлийн салбарын туйл болсон сургууль. Хүүхдүүд энд шинжлэх ухаан, робот техник, хиймэл оюун ухааныг хамгийн өндөр түвшинд суралцдаг.", link: "https://www.mit.edu/admissions-aid/" },
+            "oxford": { name: "University of Oxford", type: "Их Британи / Эртний Түүхт", desc: "Дэлхийн хамгийн эртний бөгөөд нэр хүндтэй сургуулиудын нэг. Хууль, уран зохиол, анагаах ухааны чиглэлээр дэлхийд тэргүүлдэг.", link: "https://www.oxford.ac.uk/" },
+            "муис": { name: "Монгол Улсын Их Сургууль (МУИС)", type: "Монгол / Тэргүүлэх сургууль", desc: "Монгол улсын хамгийн ууган бөгөөд хамгийн том эрдэм шинжилгээний төв. Дотооддоо хамгийн чанартай боловсролыг олгож, ирээдүйн удирдагчдыг бэлтгэдэг.", link: "https://num.edu.mn/" },
+
+            // Ангилал 1: Барууны орнууд
+            "ану": { name: "АНУ (USA)", type: "Барууны / Англи хэлтэй", desc: "Дэлхийн хамгийн олон шилдэг сургуультай (MIT, Harvard гэх мэт). Олон улсын оюутнуудын нэг номерын сонголт. Тэтгэлэг болон судалгааны боломж асар их.", link: "https://educationusa.state.gov/", cat: 1, textID: "Топ чанар" },
+            "их британи": { name: "Их Британи (UK)", type: "Барууны / Англи хэлтэй", desc: "Оксфорд, Кембриж тэргүүтэй эртний түүхт чанартай боловсрол. Засгийн газрын алдартай Chevening бүрэн тэтгэлэг олгодог.", link: "https://www.chevening.org/", cat: 1, textID: "Chevening" },
+            "канад": { name: "Канада (Canada)", type: "Барууны / Англи хэлтэй", desc: "Төгсөөд ажиллах болон цагаачлах боломж хамгийн өндөр, аюулгүй, тайван, олон соёлт орчин.", link: "https://www.educanada.ca/", cat: 1, textID: "Ажиллах" },
+            "австрали": { name: "Австрали (Australia)", type: "Барууны / Англи хэлтэй", desc: "Дулаан уур амьсгал, сурангаа ажиллах хамгийн уян хатан нөхцөл, цагийн ажлын өндөр үнэлгээтэй.", link: "https://www.studyaustralia.gov.au/", cat: 1, textID: "Өндөр Цалин" },
+            "ирланд": { name: "Ирланд (Ireland)", type: "Барууны / Англи хэлтэй", desc: "Европын технологийн төв (Google, Apple-ийн төвүүд байдаг). Англи хэл дээр сурч, технологийн компаниудад дадлага хийх боломжтой.", link: "https://www.educationinireland.com/", cat: 1, textID: "Технологи" },
+            "шинэ зеланд": { name: "Шинэ Зеланд (New Zealand)", type: "Барууны / Англи хэлтэй", desc: "Амьдралын чанар маш өндөр, байгалийн үзэсгэлэнт, маш амар амгалан, тайван орон.", link: "https://www.studywithnewzealand.govt.nz/", cat: 1, textID: "Амар тайван" },
+
+            // Ангилал 2: Азийн орнууд
+            "солонгос": { name: "Өмнөд Солонгос (South Korea)", type: "Азийн өндөр хөгжилтэй", desc: "Засгийн газрын GKS бүрэн тэтгэлэг, K-Pop соёл, хамгийн өргөн боломжтой сурангаа ажиллах орчин нөхцөлтэй.", link: "https://www.studyinkorea.go.kr/", cat: 2, textID: "GKS Тэтгэлэг" },
+            "япон": { name: "Япон (Japan)", type: "Азийн өндөр хөгжилтэй", desc: "Засгийн газрын MEXT тэтгэлэг, технологи, инженерчлэлийн оргил. Сургуулиа төгсөөд шууд ажилд орох боломж асар өндөр.", link: "https://www.studyinjapan.go.jp/", cat: 2, textID: "MEXT Тэтгэлэг" },
+            "хятад": { name: "Хятад (China)", type: "Азийн өндөр хөгжилтэй", desc: "Засгийн газрын (CSC) тэтгэлэг хамгийн их олгодог, дэлхийн эдийн засаг болон технологийн шинэ аварга гүрэн.", link: "https://www.campuschina.org/", cat: 2, textID: "CSC Тэтгэлэг" },
+            "тайвань": { name: "Тайвань (Taiwan)", type: "Азийн өндөр хөгжилтэй", desc: "Хагас дамжуулагч, IT, микрочипийн чиглэлээр дэлхийд тэргүүлэгч. Маш өндөр тэтгэлэг, боломжийн өртөгтэй.", link: "https://www.studyintaiwan.org/", cat: 2, textID: "IT & Чип" },
+            "сингапур": { name: "Сингапур (Singapore)", type: "Азийн өндөр хөгжилтэй", desc: "Азийн шилдэг сургуулиуд болох NUS, NTU байрладаг. Дэлхийн санхүү, бизнес, стартапын гол төв.", link: "https://www.moe.gov.sg/financial-matters/scholarships", cat: 2, textID: "Топ Ази" },
+            "малайз": { name: "Малайз (Malaysia)", type: "Азийн өндөр хөгжилтэй", desc: "Барууны том сургуулиудын салбарууд олонтой. Англи хэл дээр хамгийн хямд зардлаар сурах боломж олгодог.", link: "https://studymalaysia.com/", cat: 2, textID: "Хямд Англи хэл" },
+
+            // Ангилал 3: Европын холбоо
+            "герман": { name: "Герман (Germany)", type: "Европын Холбоо", desc: "Улсын сургуулиуд нь бүгд сургалтын ТӨЛБӨРГҮЙ. Инженер, авто машин, технологийн дэлхийн эх орон. DAAD тэтгэлэгтэй.", link: "https://www.daad.de/", cat: 3, textID: "Төлбөргүй" },
+            "франц": { name: "Франц (France)", type: "Европын Холбоо", desc: "Сургалтын төлбөр маш бага. Соёл урлаг, загвар, архитектур, бизнесийн чиглэл өндөр хөгжсөн.", link: "https://www.campusfrance.org/", cat: 3, textID: "Урлаг & Загвар" },
+            "унгар": { name: "Унгар (Hungary)", type: "Европын Холбоо", desc: "Монгол залууст жил бүр 200 оюутны Stipendium Hungaricum бүрэн тэтгэлэг (сургалт, байр, стипенд) өгдөг.", link: "https://stipendiumhungaricum.hu/", cat: 3, textID: "200 Тэтгэлэг" },
+            "чех": { name: "Чех (Czech Republic)", type: "Европын Холбоо", desc: "Чех хэлээр сурвал үнэ төлбөргүй. Европ дундаа амьжиргааны өртөг маш хямд, төв Европт байрлалтай.", link: "https://www.studyin.cz/", cat: 3, textID: "Үнэгүй сургалт" },
+            "австри": { name: "Австри (Austria)", type: "Европын Холбоо", desc: "Улсын сургуулиудын төлбөр маш бага (семестерт ~700 евро). Хүмүүнлэг, хөгжмийн өндөр боловсролын өлгий.", link: "https://studyinaustria.at/", cat: 3, textID: "Сонгодог" },
+            "итали": { name: "Итали (Italy)", type: "Европын Холбоо", desc: "Урлаг, дизайн, загвар, архитектураар дэлхийд тэргүүлэгч. Бүс нутгийн (DSU) амьжиргааны тэтгэлэг олдох магадлал өндөр.", link: "https://www.studying-in-italy.it/", cat: 3, textID: "Дизайн" },
+            "испани": { name: "Испани (Spain)", type: "Европын Холбоо", desc: "Бизнес, маркетинг, аялал жуулчлалын чиглэл өндөр хөгжсөн. Амьдрахад таатай, уур амьсгал маш дулаан орон.", link: "https://www.studyinginspain.com/", cat: 3, textID: "Бизнес" },
+            "польш": { name: "Польш (Poland)", type: "Европын Холбоо", desc: "Европын холбооны дипломыг хамгийн хямд зардлаар авах боломж. Эдийн засаг нь маш хурдтай өсөж буй орон.", link: "https://go-poland.pl/", cat: 3, textID: "Боломжийн Өртөг" },
+            "бельги": { name: "Бельги (Belgium)", type: "Европын Холбоо", desc: "Европын Холбооны зүрх. Олон улсын харилцаа, улс төр, дипломат чиглэлээр сурахад хамгийн тохиромжтой.", link: "https://www.studyinbelgium.be/", cat: 3, textID: "Дипломат" },
+            "нидерланд": { name: "Нидерланд (Netherlands)", type: "Европын Холбоо", desc: "Европ тивдээ Англи хэл дээрх хөтөлбөр хамгийн ихтэй. Судалгааны дэлхийн шилдэг их сургуулиудтай.", link: "https://www.studyinnl.org/", cat: 3, textID: "Англи хөтөлбөр" },
+            "швейцарь": { name: "Швейцарь (Switzerland)", type: "Европын Холбоо", desc: "Зочид буудал, аялал жуулчлалын менежмент (Hospitality) болон банк санхүүгийн чиглэлээр дэлхийд №1.", link: "https://www.studyinswitzerland.ch/", cat: 3, textID: "Банк & Зочид буудал" },
+
+            // Ангилал 4: Скандинав
+            "швед": { name: "Швед (Sweden)", type: "Скандинавын орон", desc: "Инноваци, стартап (Spotify, IKEA-ийн эх орон). Байгаль орчин, тогтвортой хөгжил, тэгш эрхт нийгэмтэй.", link: "https://studyinsweden.se/", cat: 4, textID: "Инноваци" },
+            "норвеги": { name: "Норвеги (Norway)", type: "Скандинавын орон", desc: "Хүний хөгжлийн индексээр дэлхийд тэргүүлэгч. Байгалийн баялаг, далайн инженерчлэл, энергийн салбар өндөр хөгжсөн.", link: "https://www.studyinnorway.no/", cat: 4, textID: "Амьдралын чанар" },
+            "финланд": { name: "Финланд (Finland)", type: "Скандинавын орон", desc: "Боловсролын системээрээ дэлхийд алдартай, хамгийн жаргалтай орон. Технологи, дата аналитикийн чиглэлээр хүчтэй.", link: "https://www.studyinfinland.fi/", cat: 4, textID: "Шилдэг Систем" },
+            "дани": { name: "Дани (Denmark)", type: "Скандинавын орон", desc: "Ногоон энерги, архитектур, дизайн, амьдралын маш өндөр соёлтой. Аюулгүй, жаргалтай хотуудтай.", link: "https://studyindenmark.dk/", cat: 4, textID: "Ногоон Энерги" },
+
+            // Ангилал 5: Бусад
+            "орос": { name: "Орос (Russia)", type: "Бусад бүс нутаг", desc: "Монголчууд уламжлалт байдлаар инженер, цэрэг, урлагийн чиглэлээр Засгийн газрын тэтгэлгээр маш их суралцдаг.", link: "https://studyinrussia.ru/", cat: 5, textID: "Уламжлалт" },
+            "турк": { name: "Турк (Turkey)", type: "Бусад бүс нутаг", desc: "Türkiye Bursları бүрэн тэтгэлэг олгодог. Ази Европыг холбосон соёлын дундаж цэг, сурахад маш сонирхолтой орчин.", link: "https://www.turkiyeburslari.gov.tr/", cat: 5, textID: "Бүрэн Тэтгэлэг" },
+            "араб": { name: "АНЭУ (Дубай / UAE)", type: "Бусад бүс нутаг", desc: "Барууны сургуулиудын кампусууд олноор нээгдсэн, тансаг зэрэглэлийн, ирээдүйн санхүү, технологийн шинэ хаб.", link: "https://www.visitdubai.com/en/study-in-dubai", cat: 5, textID: "Дубай / Санхүү" }
+        };
+
+        // Вэб ачаалагдах үед 30 улсыг автоматаар доод талын картуудад хуваарилан үүсгэх функц
+        window.onload = function() {
+            for (let key in database) {
+                const item = database[key];
+                if (item.cat) { // Хэрэв улс байвал (cat тагтай)
+                    const grid = document.getElementById("cat" + item.cat);
+                    const card = document.createElement("div");
+                    card.className = "country-card";
+                    card.setAttribute("onclick", `quickSearch('${item.name.split(' (')[0]}')`); // Хаалтнаас өмнөх нэрийг авах
+                    
+                    card.innerHTML = `
+                        <h4>${item.name} <span>${item.textID}</span></h4>
+                        <p>${item.desc.substring(0, 85)}...</p>
+                    `;
+                    grid.appendChild(card);
+                }
+            }
+        };
+
+        // Хайлт хийх гол функц
+        function handleSearch() {
+            const input = document.getElementById("mainInput").value.toLowerCase().trim();
+            const card = document.getElementById("resultCard");
+            
+            if (input === "") {
+                card.style.display = "none";
+                return;
+            }
+
+            let found = false;
+            for (let key in database) {
+                // Хэрэв түлхүүр үг эсвэл бүтэн нэрэнд хайлтын үг орсон байвал
+                if (key.includes(input) || database[key].name.toLowerCase().includes(input)) {
+                    document.getElementById("resName").innerText = database[key].name;
+                    document.getElementById("resType").innerText = database[key].type;
+                    document.getElementById("resDesc").innerText = database[key].desc;
+                    document.getElementById("resLink").href = database[key].link;
+                    
+                    card.style.display = "block";
+                    // Илэрц гарч ирэх үед дэлгэцийг тэр хэсэг рүү гүйлгэх
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                card.style.display = "none";
+            }
+        }
+
+        // Түлхүүр үг болон карт дээр дарахад хайлтыг ажиллуулах функц
+        function quickSearch(name) {
+            document.getElementById("mainInput").value = name;
+            handleSearch();
+        }
+    </script>
+</body>
+</html>
