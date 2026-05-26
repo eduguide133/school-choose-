@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGuide - Ирээдүйн Сургуулиа Сонгох Апп</title>
+    <!-- Зөөлөн бөгөөд орчин үеийн Nunito фонт -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4A00E0;
+            --primary-light: #8E2DE2;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        /* Улс хайх хэсэг */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 6px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(74, 0, 224, 0.08);
+        }
+
+        .search-container input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+            border-radius: 50px;
+        }
+
+        /* УЛСУУДЫН ЖАГСААЛТ */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #334155;
+            text-align: center;
+        }
+
+        .country-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .country-btn {
+            background: white;
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .country-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 0, 224, 0.1);
+            color: var(--primary);
+        }
+
+        .country-btn.active {
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 8px 20px rgba(74, 0, 224, 0.2);
+        }
+
+        /* СУРГУУЛИУДЫН GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(74, 0, 224, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .country-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .uni-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #0f172a;
+        }
+
+        .uni-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .view-btn {
+            background: #f1f5f9;
+            color: var(--primary);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .view-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        /* ПОП-АП ЦОНХ (MODAL) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 650px;
+            border-radius: 30px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .close-btn:hover {
+            color: #ef4444;
+        }
+
+        .modal-header h2 {
+            margin-top: 5px;
+            font-size: 26px;
+            color: #0f172a;
+        }
+
+        .info-section {
+            margin-top: 20px;
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .info-body {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">🎯 EduGuide</div>
+        <div style="font-weight: 600; color: var(--text-muted);">Ирээдүйн сургуулиа сонгох туслах</div>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Улсаа сонгоод сургуулиа судлаарай</h1>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="countrySearch" placeholder="Улсын нэр бичих... (Англи эсвэл Монголоор)" onkeyup="filterCountries()">
+        </div>
+
+        <div class="section-title">📍 Улсууд:</div>
+        <div class="country-buttons" id="countryButtonsContainer">
+            <button class="country-btn active" onclick="selectCountry('all', this)" data-search="бүгд бүх сургууль all">🌍 Бүгд</button>
+            <button class="country-btn" onclick="selectCountry('usa', this)" data-search="ану америка америк usa united states">АНУ / USA</button>
+            <button class="country-btn" onclick="selectCountry('china', this)" data-search="хятад бээжин шанхай шэньжэнь china">Хятад / China</button>
+            <button class="country-btn" onclick="selectCountry('korea', this)" data-search="солонгос өмнөд солонгос korea south korea сөүл">Өмнөд Солонгос / Korea</button>
+            <button class="country-btn" onclick="selectCountry('japan', this)" data-search="япон токио japan">Япон / Japan</button>
+        </div>
+
+        <div class="section-title" id="gridTitle">Шилдэг сургуулиуд:</div>
+        <div class="grid" id="uniGrid">
+            
+            <!-- === АНУ (3 СУРГУУЛЬ) === -->
+            <div class="card" data-country="usa">
+                <div class="card-header"><span class="country-tag">АНУ 🇺🇸</span></div>
+                <h3 class="uni-name">MIT</h3>
+                <p class="uni-desc">Технологи, инженерчлэл болон компьютерийн ухааны чиглэлээр дэлхийн №1 сургууль.</p>
+                <button class="view-btn" onclick="openModal('MIT', 'АНУ 🇺🇸', 'Компьютерийн ухаан (CS), Хиймэл оюун ухаан (AI), Робот техник, Инженерчлэл.', 'IELTS 7.5+ эсвэл TOEFL 100+ оноо. SAT шалгалт өгсөн байх нь маш том давуу тал болно.', 'Хувийн онцлог харуулсан 3-4 богино эссэ, багш нарын тодорхойлох захидал, дүнгийн голч (GPA 3.8+).')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="usa">
+                <div class="card-header"><span class="country-tag">АНУ 🇺🇸</span></div>
+                <h3 class="uni-name">Harvard University</h3>
+                <p class="uni-desc">Дэлхийн хамгийн нэр хүндтэй Ivy League-ийн тэргүүлэгч, түүхт сургууль.</p>
+                <button class="view-btn" onclick="openModal('Harvard University', 'АНУ 🇺🇸', 'Хууль, Бизнес, Улс төр, Эдийн засаг, Биологи.', 'IELTS 7.5+ эсвэл TOEFL 100+. SAT эсвэл ACT өндөр оноо шаардлагатай.', 'Удирдан манлайлах чадвар харуулсан эссэ, Нийгмийн идэвхийн түүх, Зөвлөх багшийн тодорхойлолт.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="usa">
+                <div class="card-header"><span class="country-tag">АНУ 🇺🇸</span></div>
+                <h3 class="uni-name">Stanford University</h3>
+                <p class="uni-desc">Цахиурын хөндийн зүрхэнд байрлах, технологийн стартап болон инновацийн төв.</p>
+                <button class="view-btn" onclick="openModal('Stanford University', 'АНУ 🇺🇸', 'Бизнесийн удирдлага, Мэдээллийн технологи, Дизайн, Физик, Инженерчлэл.', 'IELTS 7.5+ эсвэл TOEFL 100+. Эссэ бичих чадвар маш өндөр байх.', 'Ахлах ангийн дүн (GPA), Багшийн тодорхойлох захидал, Сургуулиас гадуурх нийгмийн бүтээлч ажил болон төслүүд.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <!-- === ХЯТАД (3 СУРГУУЛЬ) === -->
+            <div class="card" data-country="china">
+                <div class="card-header"><span class="country-tag">Хятад 🇨🇳</span></div>
+                <h3 class="uni-name">Tsinghua University</h3>
+                <p class="uni-desc">Бээжин хотод байрлах, Азийн №1-д тооцогддог шинжлэх ухаан, инженерчлэлийн сургууль.</p>
+                <button class="view-btn" onclick="openModal('Tsinghua University', 'Хятад 🇨🇳', 'Компьютерийн ухаан, Механик инженер, Олон улсын худалдаа, Автоматжуулалт.', 'Хятад хэлээр сурах бол HSK 5 эсвэл 6-р түвшин. Англи хөтөлбөрт бол IELTS 6.5+.', 'Хятадын Засгийн газрын тэтгэлэг (CSC)-ийн материалууд, Ахлах сургуулийн дүнгийн хуулбар (GPA өндөр байх).')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="china">
+                <div class="card-header"><span class="country-tag">Хятад 🇨🇳</span></div>
+                <h3 class="uni-name">Peking University</h3>
+                <p class="uni-desc">Хятадын хамгийн эртний бөгөөд нийгэм, хүмүүнлэг, анагаахын чиглэлээрээ тэргүүлэгч сургууль.</p>
+                <button class="view-btn" onclick="openModal('Peking University', 'Хятад 🇨🇳', 'Анагаах ухаан, Суурь шинжлэл, Хууль, Олон улсын харилцаа, Хятад хэл шинжлэл.', 'Хятад хэлний HSK 5-аас дээш оноо (Ялангуяа анагаахын чиглэлд өндөр хэлний түвшин шаардана).', 'Эрүүл мэндийн тодорхойлолт, Сургуулийн суралцах төлөвлөгөө, Багш нарын тодорхойлолт захидал.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="china">
+                <div class="card-header"><span class="country-tag">Хятад 🇨🇳</span></div>
+                <h3 class="uni-name">Fudan University</h3>
+                <p class="uni-desc">Шанхай хотод байрлах, олон улсын оюутнууд суралцахад хамгийн тохиромжтой шилдэг сургууль.</p>
+                <button class="view-btn" onclick="openModal('Fudan University', 'Хятад 🇨🇳', 'Шүдний эмч, Ерөнхий мэргэжилтэн, Санхүү, Цахим худалдаа, Сэтгэл судлал.', 'Англи хэл дээрх анагаахын хөтөлбөрт IELTS 6.5-7.0 оноо. Хятад хэлний хөтөлбөрт HSK 5+.', 'Ахлах ангийн дүнгийн баталгаат хуулбар, Тэтгэлэгт хамрагдах хүсэлт, Гэр бүлийн санхүүгийн баталгаа эсвэл тэтгэлгийн маягт.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <!-- === ӨМНӨД СОЛОНГОС (3 СУРГУУЛЬ) === -->
+            <div class="card" data-country="korea">
+                <div class="card-header"><span class="country-tag">Өмнөд Солонгос 🇰🇷</span></div>
+                <h3 class="uni-name">Seoul National University (SNU)</h3>
+                <p class="uni-desc">Солонгосын хамгийн нэр хүндтэй, Сөүлийн Үндэсний Их Сургууль.</p>
+                <button class="view-btn" onclick="openModal('Seoul National University', 'Өмнөд Солонгос 🇰🇷', 'Олон улсын харилцаа, Медиа, Бизнесийн удирдлага, Солонгос судлал.', 'Солонгос хэлний TOPIK 3 эсвэл 4-р түвшин. Англи хэлний IELTS 6.0+.', 'GKS тэтгэлэгт бэлдэх материалууд, Суралцах төлөвлөгөө (Study Plan) болон 2 ширхэг багшийн тодорхойлолт.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="korea">
+                <div class="card-header"><span class="country-tag">Өмнөд Солонгос 🇰🇷</span></div>
+                <h3 class="uni-name">KAIST</h3>
+                <p class="uni-desc">Шинжлэх ухаан, өндөр технологийн чиглэлээр дагнасан Солонгосын MIT гэгддэг сургууль.</p>
+                <button class="view-btn" onclick="openModal('KAIST', 'Өмнөд Солонгос 🇰🇷', 'Робот техник, Програм хангамж, Электроникс, Нанотехнологи.', 'Хичээлүүд нь 100% Англи хэл дээр ордог тул IELTS 6.5+ эсвэл TOEFL өндөр оноо шаардлагатай.', 'Математик, Физик, Химийн хичээлийн амжилт, олимпиадын дүн маш том давуу тал болдог. Сургуулийн 100% тэтгэлэгтэй.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="korea">
+                <div class="card-header"><span class="country-tag">Өмнөд Солонгос 🇰🇷</span></div>
+                <h3 class="uni-name">Yonsei University</h3>
+                <p class="uni-desc">Бизнес, олон улсын харилцаа болон гоо сайхан, дизайны чиглэлээр алдартай хувийн топ сургууль.</p>
+                <button class="view-btn" onclick="openModal('Yonsei University', 'Өмнөд Солонгос 🇰🇷', 'Бизнесийн удирдлага, Дизайн ба Медиа, Гоо сайхны инженерчлэл, Биотехнологи.', 'TOPIK 3-аас дээш эсвэл Англи хэлний Underwood олон улсын коллежид сурах бол IELTS 6.5+.', 'Өөрийн идэвхийг харуулсан эссэ, Сургуулийн дотоод тэтгэлэгт хамрагдах өргөдөл, Санхүүгийн баталгаа хуудас.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <!-- === ЯПОН (3 СУРГУУЛЬ) === -->
+            <div class="card" data-country="japan">
+                <div class="card-header"><span class="country-tag">Япон 🇯🇵</span></div>
+                <h3 class="uni-name">University of Tokyo</h3>
+                <p class="uni-desc">Японы хамгийн өндөр зэрэглэлийн, Нобелийн шагналтнуудын өлгий сургууль.</p>
+                <button class="view-btn" onclick="openModal('University of Tokyo', 'Япон 🇯🇵', 'Робот техник, Инженерчлэл, Биотехнологи, Ази судлал.', 'Япон хэлний JLPT N1/N2 эсвэл EJU шалгалт. Англи хөтөлбөрт бол IELTS 7.0+.', 'MEXT тэтгэлгийн шалгуур, Математик, Физикийн суурь шалгалтын оноонууд.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="japan">
+                <div class="card-header"><span class="country-tag">Япон 🇯🇵</span></div>
+                <h3 class="uni-name">Kyoto University</h3>
+                <p class="uni-desc">Судалгаа шинжилгээ, чөлөөт сэтгэлгээг дэмждэг Японы хоёр дахь ууган их сургууль.</p>
+                <button class="view-btn" onclick="openModal('Kyoto University', 'Япон 🇯🇵', 'Хими, Физик, Байгалийн шинжлэх ухаан, Мехатроник.', 'JLPT N1 түвшин эсвэл Англи хэл дээрх хөтөлбөрт IELTS 6.5+ оноо шаардана.', 'Судалгааны ажил хийх төлөвлөгөө (Магистр/Докторт чухал), Ахлах сургуулийн дүн, EJU оноо.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+            <div class="card" data-country="japan">
+                <div class="card-header"><span class="country-tag">Япон 🇯🇵</span></div>
+                <h3 class="uni-name">Tokyo Institute of Technology</h3>
+                <p class="uni-desc">Японы хамгийн том техникийн сургууль бөгөөд практик инженер бэлтгэхдээ гаргууд.</p>
+                <button class="view-btn" onclick="openModal('Tokyo Institute of Technology', 'Япон 🇯🇵', 'Компьютерийн инженер, Архитектур, Материал судлал, Систем инженерчлэл.', 'EJU (Японы их сургуульд элсэх шалгалт)-ын Математик, Физик, Химийн оноо маш өндөр байх шаардлагатай.', 'MEXT тэтгэлэг эсвэл сургуулийн шууд элсэлтийн материалууд, Багшийн тодорхойлолт.')">Дэлгэрэнгүй харах</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ПОП-АП МЭДЭЭЛЛИЙН ЦОНХ -->
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <span class="country-tag" id="modalCountry">Улс</span>
+                <h2 id="modalTitle">Сургуулийн нэр</h2>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">💡 ТҮГЭЭМЭЛ СУРАЛЦДАГ ЧИГЛЭЛҮҮД:</div>
+                <div class="info-body" id="modalMajors">Мэдээлэл...</div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">💬 ХЭЛНИЙ БОЛОН ШАЛГАЛТЫН ШААРДЛАГА:</div>
+                <div class="info-body" id="modalRequirements">Мэдээлэл...</div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">📋 БҮРДҮҮЛЭХ МАТЕРИАЛ & ТЭТГЭЛЭГ:</div>
+                <div class="info-body" id="modalMaterials">Мэдээлэл...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. УЛС ХАЙХ БОЛОН ШҮҮХ ФУНКЦ
+        function filterCountries() {
+            let input = document.getElementById('countrySearch').value.toLowerCase();
+            let buttons = document.getElementsByClassName('country-btn');
+
+            for (let i = 0; i < buttons.length; i++) {
+                let searchTerms = buttons[i].getAttribute('data-search');
+                if (i === 0) continue; 
+                
+                if (searchTerms.includes(input)) {
+                    buttons[i].style.display = "inline-block";
+                } else {
+                    buttons[i].style.display = "none";
+                }
+            }
+        }
+
+        // 2. УЛС ДЭЭР ДАРАХАД СУРАЛЦАХ СУРГУУЛИУДЫГ ШҮҮХ ФУНКЦ
+        function selectCountry(countryCode, element) {
+            let buttons = document.getElementsByClassName('country-btn');
+            for (let b of buttons) {
+                b.classList.remove('active');
+            }
+            element.classList.add('active');
+
+            let cards = document.getElementsByClassName('card');
+
+            for (let card of cards) {
+                let cardCountry = card.getAttribute('data-country');
+                
+                if (countryCode === 'all' || cardCountry === countryCode) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+            
+            let title = document.getElementById('gridTitle');
+            if(countryCode === 'all') {
+                title.innerText = "Шилдэг сургуулиуд:";
+            } else {
+                title.innerText = element.innerText + "-н шилдэг сургуулиуд:";
+            }
+        }
+
+        // 3. ПОП-АП МЭДЭЭЛЭЛ НЭЭХ/ХААХ ФУНКЦ
+        function openModal(title, country, majors, requirements, materials) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalCountry').innerText = country;
+            document.getElementById('modalMajors').innerText = majors;
+            document.getElementById('modalRequirements').innerText = requirements;
+            document.getElementById('modalMaterials').innerText = materials;
+            
+            document.getElementById('infoModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').classList.remove('active');
+        }
+
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            if(e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
